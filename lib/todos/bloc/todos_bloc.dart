@@ -17,18 +17,32 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     on<OnTaskUpdated>((event, emit) {
       debugPrint("on Task Updated event called");
       debugPrint("previous Value: ${state.todosList[0].isCompleted}");
-
       state.todosList = state.todosList.map((task) {
         if (task.id == event.id) {
           task.isCompleted = event.value;
         }
         return task;
       }).toList();
+
       debugPrint("state emitted");
       // print(state);
       debugPrint("updated Value: ${state.todosList[0].isCompleted}");
-      state.todosList = [];
-      emit(state);
+      // state.todosList = [];
+      emit(InitialState(state.todosList));
     });
+
+    on<OnTaskAdded>(
+      (event, emit) {
+        state.todosList = state.todosList +
+            [
+              TodoModel(
+                  id: DateTime.now().toUtc().toString(),
+                  title: event.title,
+                  description: event.description,
+                  isCompleted: false)
+            ];
+        emit(InitialState(state.todosList));
+      },
+    );
   }
 }

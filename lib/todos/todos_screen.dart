@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_todo_app/todos/bloc/todos_bloc.dart';
 
-import 'models/todo_model.dart';
-
 class TodosScreen extends StatelessWidget {
   const TodosScreen({super.key});
 
@@ -15,10 +13,20 @@ class TodosScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Todos"),
-        actions: const [Icon(Icons.filter_list), Icon(Icons.more_vert_rounded)],
+        actions: const [
+          Icon(Icons.filter_list),
+          Icon(Icons.more_vert_rounded),
+        ],
       ),
       body: BlocBuilder<TodosBloc, TodosState>(
-        builder: (context, state) => ListView(
+        
+          //   buildWhen: (pre, cure) {
+          //   debugPrint("build When Called");
+          //   return true;
+          // },
+          
+          builder: (context, state) {
+        return ListView(
           children: state.todosList
               .map(
                 (todo) => ListTile(
@@ -34,8 +42,8 @@ class TodosScreen extends StatelessWidget {
                 ),
               )
               .toList(),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

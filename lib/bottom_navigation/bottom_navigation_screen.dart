@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_todo_app/bottom_navigation/bloc/bottom_navigation_bloc.dart';
 import 'package:my_todo_app/stats/stats_screen.dart';
 import 'package:my_todo_app/todos/todos_screen.dart';
+import '../todo_details/todo_details_screen.dart';
 
 class BottomNavigationScreen extends StatelessWidget {
   const BottomNavigationScreen({super.key});
@@ -15,7 +16,25 @@ class BottomNavigationScreen extends StatelessWidget {
     BottomNavigationBloc bloc = context.read<BottomNavigationBloc>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (_) => BlocProvider(
+          //             create: (_) => TodoDetailsBloc(),
+          //             child: TodoDetailsScreen())));
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (_) => BlocProvider.value(
+          //       value: BlocProvider.of<TodoDetailsBloc>(context),
+          //       child: TodoDetailsScreen(),
+          //     ),
+          //   ),
+          // );
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => TodoDetailsScreen()));
+        },
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

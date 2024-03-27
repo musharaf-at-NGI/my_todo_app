@@ -4,70 +4,113 @@ import 'package:my_todo_app/todo_details/bloc/todo_details_bloc.dart';
 import 'package:my_todo_app/todos/bloc/todos_bloc.dart';
 
 class TodoDetailsScreen extends StatelessWidget {
-  TodoDetailsScreen({super.key});
+  TodoDetailsScreen([bool? isNewTodo, String? title, String? description]) {
+    this.isNewTodo = false;
+    titleController.text = title ?? "";
+    descriptionController.text = description ?? "";
+  }
+  final TextEditingController titleController =
+      TextEditingController(text: 'Title');
+  final TextEditingController descriptionController =
+      TextEditingController(text: "Description");
 
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  bool? isNewTodo;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TodoDetailsBloc(),
+      create: (_) => TodoDetailsBloc(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
             "Todo Details",
           ),
         ),
-        floatingActionButton: BlocConsumer<TodoDetailsBloc, TodoDetailsState>(
-            // bloc: TodoDetailsBloc(),
-            listener: (blocContext, state) {
-          debugPrint("Listener is called");
-          if (state is TodoDetailsSavedState) {
-            debugPrint("inside listener saved state");
-            BlocProvider.of<TodosBloc>(context).add(
-              OnTaskAdded(titleController.text, descriptionController.text),
-            );
-            Navigator.pop(context);
-          }
-        }, builder: (context, state) {
-          debugPrint("Todo Bloc Builder called with State $state");
-          return FloatingActionButton(
-              child: const Icon(
-                Icons.check,
-              ),
-              onPressed: () {
-                context.read<TodoDetailsBloc>().add(
+        floatingActionButton: MultiBlocListener(
+          listeners: [
+            BlocListener<TodoDetailsBloc, TodoDetailsState>(
+              listener: (blocContext, state) {
+                debugPrint("Listener is called with State: $state");
+                if (state is TodoDetailsSavedState) {
+                  debugPrint("Inside listener saved state");
+                  BlocProvider.of<TodosBloc>(context).add(
+                    OnTaskAdded(
+                        titleController.text, descriptionController.text),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            BlocListener<TodosBloc, TodosState>(
+              listener: (blocContext, state) {
+                debugPrint("Listener is called with State: $state");
+                debugPrint("listener new value: ${state.todosList[0].title}");
+
+                if (state is TodoEditedSuccessState) {
+                  debugPrint("Inside success listener saved state");
+                  // BlocProvider.of<TodosBloc>(context).add(
+                  //   OnTaskAdded(
+                  //       titleController.text, descriptionController.text),
+                  // );
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<TodoDetailsBloc, TodoDetailsState>(
+            builder: (detailsContext, state) => FloatingActionButton(
+                child: const Icon(
+                  Icons.check,
+                ),
+                onPressed: () {
+                  final todoState = BlocProvider.of<TodosBloc>(context).state;
+                  final tdoBloc = BlocProvider.of<TodosBloc>(context);
+                  if (todoState is TodoEditRequestedState) {
+                    tdoBloc.add(OnTaskDetailsUpdated(todoState.id,
+                        titleController.text, descriptionController.text));
+                  } else {
+                    debugPrint("Reacehd to else");
+                    BlocProvider.of<TodoDetailsBloc>(detailsContext).add(
                       OnPressedSaveData(
                         titleController.text,
                         descriptionController.text,
                       ),
                     );
-                // Navigator.pop(context);
-              });
-        }),
+                  }
+                  // Navigator.pop(context);
+                }),
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(label: Text("Title")),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                controller: descriptionController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  label: Text(
-                    "Description",
+          child: BlocBuilder<TodosBloc, TodosState>(
+              // bloc: TodosBloc(),
+              builder: (context, state) {
+            if (state is TodoEditRequestedState) {
+              titleController.text = state.title;
+              descriptionController.text = state.description;
+            }
+            return Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(label: Text("Title")),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    label: Text(
+                      "Description",
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ),
     );

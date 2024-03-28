@@ -75,13 +75,16 @@ class TodosScreen extends StatelessWidget {
           children: state.todosList
               .map(
                 (todo) => Dismissible(
-                  background: Container(color: Colors.transparent,),
-                  secondaryBackground: Container(
+                  background: Container(
                     color: Colors.red,
                   ),
+                  // secondaryBackground: Container(
+                  //   color: Colors.red,
+                  // ),
                   key: Key(todo.id),
                   onDismissed: (value) {
                     debugPrint("Dismissed");
+                    bloc.add(OnTodoDelete(todo.id));
                   },
                   child: ListTile(
                     onTap: () {

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_todo_app/bottom_navigation/bloc/bottom_navigation_bloc.dart';
 import 'package:my_todo_app/stats/stats_screen.dart';
 import 'package:my_todo_app/todos/bloc/todos_bloc.dart';
+import 'package:my_todo_app/todos/models/todo_model.dart';
+import 'package:my_todo_app/todos/repository/todos_repository.dart';
 import 'package:my_todo_app/todos/todos_screen.dart';
 import '../todo_details/todo_details_screen.dart';
 
@@ -17,7 +19,18 @@ class BottomNavigationScreen extends StatelessWidget {
     BottomNavigationBloc bloc = context.read<BottomNavigationBloc>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          // TodosRepository repository = TodosRepository();
+          // await repository.addTodo(
+          //   TodoModel(
+          //     id: DateTime.now().toUtc().toString(),
+          //     title: "Task 1",
+          //     description: "description",
+          //     isCompleted: false,
+          //   ),
+          // );
+          // repository.fetchTodos();
+
           Navigator.push(
             context,
             MaterialPageRoute(

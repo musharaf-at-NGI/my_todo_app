@@ -43,6 +43,7 @@ class OnMarkAllComplete extends TodosEvent {}
 
 class OnMarkAllActive extends TodosEvent {}
 
-class OnTodoDelete extends TodosEvent {}
-
-
+class OnTodoDelete extends TodosEvent {
+  String id;
+  OnTodoDelete(this.id);
+}

@@ -8,8 +8,6 @@ class TodosScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<TodoModel> todosList = context.select<TodosBloc, List<TodoModel>>(
-    // (TodosBloc bloc) => bloc.state.todosList);
     TodosBloc bloc = context.read<TodosBloc>();
     return Scaffold(
       appBar: AppBar(
@@ -69,8 +67,6 @@ class TodosScreen extends StatelessWidget {
         }
       }, builder: (context, state) {
         TodosBloc bloc = context.read<TodosBloc>();
-        debugPrint("Todo Bloc builder called with State: ${state}");
-        // debugPrint("with new value: ${state.todosList[0].title}");
         return ListView(
           children: state.todosList
               .map(
@@ -78,9 +74,6 @@ class TodosScreen extends StatelessWidget {
                   background: Container(
                     color: Colors.red,
                   ),
-                  // secondaryBackground: Container(
-                  //   color: Colors.red,
-                  // ),
                   key: Key(todo.id),
                   onDismissed: (value) {
                     debugPrint("Dismissed");

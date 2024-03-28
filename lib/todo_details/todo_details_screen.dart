@@ -4,17 +4,9 @@ import 'package:my_todo_app/todo_details/bloc/todo_details_bloc.dart';
 import 'package:my_todo_app/todos/bloc/todos_bloc.dart';
 
 class TodoDetailsScreen extends StatelessWidget {
-  TodoDetailsScreen([bool? isNewTodo, String? title, String? description]) {
-    this.isNewTodo = false;
-    titleController.text = title ?? "";
-    descriptionController.text = description ?? "";
-  }
-  final TextEditingController titleController =
-      TextEditingController(text: 'Title');
-  final TextEditingController descriptionController =
-      TextEditingController(text: "Description");
-
-  bool? isNewTodo;
+  TodoDetailsScreen() : super();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +35,7 @@ class TodoDetailsScreen extends StatelessWidget {
             ),
             BlocListener<TodosBloc, TodosState>(
               listener: (blocContext, state) {
-                debugPrint("Listener is called with State: $state");
-                debugPrint("listener new value: ${state.todosList[0].title}");
-
                 if (state is TodoEditedSuccessState) {
-                  debugPrint("Inside success listener saved state");
-                  // BlocProvider.of<TodosBloc>(context).add(
-                  //   OnTaskAdded(
-                  //       titleController.text, descriptionController.text),
-                  // );
                   Navigator.pop(context);
                 }
               },
@@ -69,7 +53,6 @@ class TodoDetailsScreen extends StatelessWidget {
                     tdoBloc.add(OnTaskDetailsUpdated(todoState.id,
                         titleController.text, descriptionController.text));
                   } else {
-                    debugPrint("Reacehd to else");
                     BlocProvider.of<TodoDetailsBloc>(detailsContext).add(
                       OnPressedSaveData(
                         titleController.text,
@@ -77,15 +60,12 @@ class TodoDetailsScreen extends StatelessWidget {
                       ),
                     );
                   }
-                  // Navigator.pop(context);
                 }),
           ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: BlocBuilder<TodosBloc, TodosState>(
-              // bloc: TodosBloc(),
-              builder: (context, state) {
+          child: BlocBuilder<TodosBloc, TodosState>(builder: (context, state) {
             if (state is TodoEditRequestedState) {
               titleController.text = state.title;
               descriptionController.text = state.description;
@@ -102,12 +82,8 @@ class TodoDetailsScreen extends StatelessWidget {
                 TextField(
                   controller: descriptionController,
                   maxLines: 4,
-                  decoration: const InputDecoration(
-                    label: Text(
-                      "Description",
-                    ),
-                  ),
-                ),
+                  decoration: const InputDecoration(label: Text("Description")),
+                )
               ],
             );
           }),

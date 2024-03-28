@@ -3,8 +3,7 @@ part of 'todos_bloc.dart';
 sealed class TodosEvent {}
 
 class LoadInitialTodos extends TodosEvent {
-  LoadInitialTodos(this.todosList);
-  List<TodoModel> todosList;
+  LoadInitialTodos();
 }
 
 class OnTaskUpdated extends TodosEvent {

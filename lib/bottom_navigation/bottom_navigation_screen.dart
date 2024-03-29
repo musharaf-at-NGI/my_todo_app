@@ -20,11 +20,8 @@ class BottomNavigationScreen extends StatelessWidget {
         onPressed: () async {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<TodosBloc>(context),
-                child: TodoDetailsScreen(),
-              ),
+            TodoDetailsScreen.todoDetailsScreenRoute(
+              todosBloc: context.read<TodosBloc>(),
             ),
           );
         },

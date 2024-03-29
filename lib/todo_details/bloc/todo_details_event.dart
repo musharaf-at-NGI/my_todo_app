@@ -5,13 +5,11 @@ sealed class TodoDetailsEvent {}
 class OnPressedSaveData extends TodoDetailsEvent {
   final String title;
   final String description;
-  OnPressedSaveData(this.title, this.description);
+  final TodoModel? todoModel;
+  OnPressedSaveData(this.title, this.description, this.todoModel);
 }
 
-class OnPressedCreateTodo extends TodoDetailsEvent {}
-
 class OnPressedEditTodo extends TodoDetailsEvent {
-  final String title;
-  final String description;
-  OnPressedEditTodo(this.title, this.description);
+  final TodoModel? todoModel;
+  OnPressedEditTodo({this.todoModel});
 }

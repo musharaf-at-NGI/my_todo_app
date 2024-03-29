@@ -25,6 +25,12 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
       emit(InitialState(todosRepository.allTodos));
     });
 
+    on<OnTodoSuccessfullyAddedUpdated>(
+      (event, emit) {
+        emit(InitialState(todosRepository.allTodos));
+      },
+    );
+
     on<OnTaskAdded>(
       (event, emit) async {
         await todosRepository.addTodo(

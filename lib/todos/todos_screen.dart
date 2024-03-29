@@ -53,52 +53,47 @@ class TodosScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocConsumer<TodosBloc, TodosState>(listener: (context, state) {
-        if (state is TodoEditRequestedState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<TodosBloc>(context),
-                child: TodoDetailsScreen(),
-              ),
-            ),
-          );
-        }
-      }, builder: (context, state) {
-        TodosBloc bloc = context.read<TodosBloc>();
-        return ListView(
-          children: state.todosList
-              .map(
-                (todo) => Dismissible(
-                  background: Container(
-                    color: Colors.red,
-                  ),
-                  key: Key(todo.id),
-                  onDismissed: (value) {
-                    debugPrint("Dismissed");
-                    bloc.add(OnTodoDelete(todo.id));
-                  },
-                  child: ListTile(
-                    onTap: () {
-                      bloc.add(OnTodoDetailsPageRequested(
-                          todo.title, todo.description, todo.id));
-                    },
-                    leading: Checkbox(
-                      value: todo.isCompleted,
-                      onChanged: (value) {
-                        bloc.add(OnTaskUpdated(todo.id, value!));
-                      },
+      body: BlocBuilder<TodosBloc, TodosState>(
+        builder: (context, state) {
+          TodosBloc bloc = context.read<TodosBloc>();
+          return ListView(
+            children: state.todosList
+                .map(
+                  (todo) => Dismissible(
+                    background: Container(
+                      color: Colors.red,
                     ),
-                    title: Text(todo.title),
-                    subtitle: Text(todo.description),
-                    trailing: const Icon(Icons.arrow_right_outlined),
+                    key: Key(todo.id),
+                    onDismissed: (value) {
+                      debugPrint("Dismissed");
+                      bloc.add(OnTodoDelete(todo.id));
+                    },
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          TodoDetailsScreen.todoDetailsScreenRoute(
+                            todo: todo,
+                            todosBloc: context.read<TodosBloc>(),
+                          ),
+                        );
+                      },
+                      leading: Checkbox(
+                        value: todo.isCompleted,
+                        onChanged: (value) {
+                          bloc.add(OnTaskUpdated(todo.id, value!));
+                        },
+                      ),
+                      title: Text(todo.title),
+                      subtitle: Text(todo.description),
+                      trailing: const Icon(Icons.arrow_right_outlined),
+                    ),
                   ),
-                ),
-              )
-              .toList(),
-        );
-      }),
+                )
+                .toList(),
+          );
+        },
+      ),
     );
   }
 }

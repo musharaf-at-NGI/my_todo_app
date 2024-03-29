@@ -32,6 +32,8 @@ class OnTodoDetailsPageRequested extends TodosEvent {
   OnTodoDetailsPageRequested(this.title, this.description, this.id);
 }
 
+class OnTodoSuccessfullyAddedUpdated extends TodosEvent {}
+
 class OnTappedShowAll extends TodosEvent {}
 
 class OnTappedShowCompleted extends TodosEvent {}
